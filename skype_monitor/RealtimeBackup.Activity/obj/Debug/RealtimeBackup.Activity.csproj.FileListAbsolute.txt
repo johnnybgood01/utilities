@@ -1,1 +1,2 @@
 C:\src\tools\utilities\Realtime Skype Backup\RealtimeBackup.Activity\bin\Debug\RealtimeBackup.Activity.exe.config
+C:\src\utilities\skype_monitor\RealtimeBackup.Activity\bin\Debug\RealtimeBackup.Activity.exe.config

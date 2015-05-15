@@ -231,42 +231,273 @@ namespace RealtimeBackup.Monitor
         }
     }
 
-    public class FileMonitor
+    public class FileMonitorConfiguration
     {
-        private string 
-            _pathToSourceFile, 
-            _pathToTargetFile,
-            _fileName, 
-            _userName, 
-            _password,
-            _sourceComputerName, 
-            _stagingDbString;
+        public string SourceFilePath { get; set; }
+        public string TargetFilePath { get; set; }
+        public string FileName { get; set; }
+       
+    }
 
-        public FileMonitor(string sourceName, string pathToSourceFile, string pathToTargetFile, string fileName, string userName, string password, string stagingDbString)
+    public class RemoteFileMonitorConfiguration : FileMonitorConfiguration
+    {
+        public string ComputerName { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
+    }
+
+    public interface IChatMessage
+    {
+        string ConversationDisplayName { get; set; }
+
+        void BuildCsv(StringBuilder builder);
+    }
+
+    public interface IChatConversation
+    {
+        int Id { get; set; }
+        int IsPermanent { get; set; }
+        int Type { get; set; }
+        string LiveHost { get; set; }
+        int LiveStartTimeStamp { get; set; }
+        int LiveIsMuted { get; set; }
+        string AlertString { get; set; }
+        int IsBookMarked { get; set; }
+        int IsBlocked { get; set; }
+        string GivenDisplayName { get; set; }
+        string DisplayName { get; set; }
+        int LocalLiveStatus { get; set; }
+        DateTime? InboxTimeStampAsDateTime { get; set; }
+        int InboxTimeStamp { get; set; }
+        int InboxMessageId { get; set; }
+        int UnconsumedSuppressedMessages { get; set; }
+        int UnconsumedNormalMessages { get; set; }
+        int UnconsumedElevatedMessages { get; set; }
+        int UnconsumedMessagesVoice { get; set; }
+        int ActiveVmId { get; set; }
+        int ContextHorizon { get; set; }
+        int ConsumptionHorizon { get; set; }
+        DateTime? LastActivityTimeStampAsDateTime { get; set; }
+        int LastActivityTimeStamp { get; set; }
+        int ActiveInvoiceMessage { get; set; }
+        int SpawnedFromConvoId { get; set; }
+        int PinnedOrder { get; set; }
+        string Creator { get; set; }
+        DateTime? CreationTimeStampAsDateTime { get; set; }
+        int CreationTimeStamp { get; set; }
+        int MyStatus { get; set; }
+        int OptJoiningEnabled { get; set; }
+        string OptAccessToken { get; set; }
+        int OptEntryLevelRank { get; set; }
+        int OptDiscloseHistory { get; set; }
+        int OptHistoryLimitInDays { get; set; }
+        int OptAdminOnlyActivities { get; set; }
+        string PasswordHint { get; set; }
+        string MetaName { get; set; }
+        string MetaTopic { get; set; }
+        string MetaGuidelines { get; set; }
+        byte[] MetaPicture { get; set; }
+        string Picture { get; set; }
+        int IsP2PMigrated { get; set; }
+        int PremiumVideoStatus { get; set; }
+        int PremiumVideoIsGracePeriod { get; set; }
+        string Guid { get; set; }
+        string DialogPartner { get; set; }
+        string MetaDescription { get; set; }
+        string PremiumVideoSponsorList { get; set; }
+        string McrCaller { get; set; }
+        int ChatDbId { get; set; }
+        int HistoryHorizon { get; set; }
+        int HistorySyncState { get; set; }
+        string ThreadVersion { get; set; }
+        int ConsumptionHorizonSetAt { get; set; }
+        string AltIdentity { get; set; }
+        int InMigratedThreadSince { get; set; }
+        int ExtPropProfileHeight { get; set; }
+        int ExtPropChatWidth { get; set; }
+        int ExtPropChatLeftMargin { get; set; }
+        int ExtPropChatRightMargin { get; set; }
+        int ExtPropEntryHeight { get; set; }
+        int ExtPropWindowPosX { get; set; }
+        int ExtPropWindowPosY { get; set; }
+        int ExtPropWindowPosW { get; set; }
+        int ExtPropWindowPosH { get; set; }
+        int ExtPropWindowMaximized { get; set; }
+        int ExtPropWindowDetached { get; set; }
+        int ExtPropPinnedOrder { get; set; }
+        int ExtPropNewInInbox { get; set; }
+        int ExtPropTabOrder { get; set; }
+        int ExtPropVideoLayout { get; set; }
+        int ExtPropVideoChatHeight { get; set; }
+        int ExtPropChatAvatar { get; set; }
+        int ExtPropConsumptionTimeStamp { get; set; }
+        int ExtPropFormVisible { get; set; }
+        int ExtPropRecoveryMode { get; set; }
+        int LastMessageId { get; set; }
+        void BuildCsv(StringBuilder builder);
+
+        /*
+         id INTEGER NOT NULL PRIMARY KEY, 
+         * is_permanent INTEGER, 
+         * identity TEXT, 
+         * type INTEGER, 
+         * live_host TEXT, 
+         * live_start_timestamp INTEGER, 
+         * live_is_muted INTEGER, 
+         * alert_string TEXT, 
+         * is_bookmarked INTEGER, 
+         * is_blocked INTEGER, 
+         * given_displayname TEXT, 
+         * displayname TEXT, 
+         * local_livestatus INTEGER, 
+         * inbox_timestamp INTEGER, 
+         * inbox_message_id INTEGER, 
+         * unconsumed_suppressed_messages INTEGER, 
+         * unconsumed_normal_messages INTEGER, 
+         * unconsumed_elevated_messages INTEGER, 
+         * unconsumed_messages_voice INTEGER, 
+         * active_vm_id INTEGER, 
+         * context_horizon INTEGER, 
+         * consumption_horizon INTEGER, 
+         * last_activity_timestamp INTEGER, 
+         * active_invoice_message INTEGER, 
+         * spawned_from_convo_id INTEGER, 
+         * pinned_order INTEGER, 
+         * creator TEXT, 
+         * creation_timestamp INTEGER, 
+         * my_status INTEGER, 
+         * opt_joining_enabled INTEGER, 
+         * opt_access_token TEXT, 
+         * opt_entry_level_rank INTEGER, 
+         * opt_disclose_history INTEGER, 
+         * opt_history_limit_in_days INTEGER, 
+         * opt_admin_only_activities INTEGER, 
+         * passwordhint TEXT, 
+         * meta_name TEXT, 
+         * meta_topic TEXT, 
+         * meta_guidelines TEXT, 
+         * meta_picture BLOB, 
+         * picture TEXT, 
+         * is_p2p_migrated INTEGER, 
+         * premium_video_status INTEGER, 
+         * premium_video_is_grace_period INTEGER, 
+         * guid TEXT, 
+         * dialog_partner TEXT, 
+         * meta_description TEXT, 
+         * premium_video_sponsor_list TEXT, 
+         * mcr_caller TEXT, 
+         * chat_dbid INTEGER, 
+         * history_horizon INTEGER, 
+         * history_sync_state TEXT, 
+         * thread_version TEXT, 
+         * consumption_horizon_set_at INTEGER, 
+         * alt_identity TEXT, 
+         * in_migrated_thread_since INTEGER, 
+         * extprop_profile_height INTEGER, 
+         * extprop_chat_width INTEGER, 
+         * extprop_chat_left_margin INTEGER, 
+         * extprop_chat_right_margin INTEGER, 
+         * extprop_entry_height INTEGER, 
+         * extprop_windowpos_x INTEGER, 
+         * extprop_windowpos_y INTEGER, 
+         * extprop_windowpos_w INTEGER, 
+         * extprop_windowpos_h INTEGER, 
+         * extprop_window_maximized INTEGER, 
+         * extprop_window_detached INTEGER, 
+         * extprop_pinned_order INTEGER, 
+         * extprop_new_in_inbox INTEGER, 
+         * extprop_tab_order INTEGER, 
+         * extprop_video_layout INTEGER, 
+         * extprop_video_chat_height INTEGER, 
+         * extprop_chat_avatar INTEGER, 
+         * extprop_consumption_timestamp INTEGER, 
+         * extprop_form_visible INTEGER, 
+         * extprop_recovery_mode INTEGER, 
+         * last_message_id INTEGER
+         */
+    }
+
+    public interface ISkypeDbAdapter
+    { 
+        void SetConnection(string pathToFile);
+        IEnumerable<IChatConversation> GetConversations();
+        IEnumerable<IChatMessage> GetChatMessages();
+
+    }
+
+    public class RemoteFileMonitor
+    {
+        private readonly RemoteFileMonitorConfiguration _configuration;
+        protected ISkypeDbAdapter _skypeAdapter;
+        protected IObservable<IChatMessage> ChatMessageStream;
+        protected IObservable<IChatConversation> ChatRoomStream;
+        private IDisposable
+            _disposableNetworkConnection,
+            _chatRoomSubscription,
+            _chatMessageSubscription;
+        protected string _targetFilePath;
+
+        public RemoteFileMonitor(RemoteFileMonitorConfiguration configuration, ISkypeDbAdapter skypeAdapter)
         {
-            _sourceComputerName = sourceName;
-            _pathToSourceFile = pathToSourceFile;
-            _pathToTargetFile = pathToTargetFile;
-            _fileName = fileName;
-            _userName = userName;
-            _password = password;
+            _configuration = configuration;
+            _skypeAdapter = skypeAdapter;
+        }
+
+        protected void StartInternal()
+        {
+            _disposableNetworkConnection = NetworkShareAccesser.Access(_configuration.ComputerName, null, _configuration.UserName, _configuration.Password);
+            _skypeAdapter.SetConnection(string.Format("\\\\{0}\\{1}\\{2}", _configuration.ComputerName, _configuration.SourceFilePath, _configuration.FileName));
         }
 
         public void Start()
         {
-            using (NetworkShareAccesser.Access(_sourceComputerName, null, _userName, _password))
+                        StartInternal();
+                        _targetFilePath = string.Format("{0}\\{1}.csv", _configuration.TargetFilePath, _configuration.FileName);
+            _chatRoomSubscription =    ChatRoomStream.Subscribe(ProcessChatRoom);
+            _chatMessageSubscription =   ChatMessageStream.Subscribe(ProcessChatMessage);
+        }
+
+        public void Stop()
+        { 
+             _chatRoomSubscription.Dispose();
+             _chatMessageSubscription.Dispose();
+             _disposableNetworkConnection.Dispose();
+
+        }
+
+        protected virtual void ProcessChatMessage(IChatMessage entry)
+        {
+            StringBuilder builder = new StringBuilder();
+            entry.BuildCsv(builder);
+
+            string builderResult = builder.ToString();
+
+            if (string.IsNullOrWhiteSpace(builderResult))
+                return;
+
+            string conversationsFile = string.Format("{0}.conversations", _targetFilePath);
+
+            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(conversationsFile, true))
             {
-                
+                writer.WriteLine(builderResult);
+            }
+        }
 
-                //TODO: Open the database in read-only mode
-                //TODO: scan the database every 10 seconds for new entries (i.e. select * from blah blah where id > lastScannedId)
-                       /*When performing this scan, make sure that the scan for monitored messages and monitored conversations are grouped
-                        so that they happen every 10 seconds, but there should never be an overlap between runs. 
-                        Other tables are not going to change as much. This will not be a complete "Mirror" of the source DB yet, but in the 
-                        future the source DB will be mirrored in such a way as to be able to replay the entries in the database and get an exact
-                        duplicate. */
+        protected virtual void ProcessChatRoom(IChatConversation conversationEntry)
+        {
+            StringBuilder builder = new StringBuilder();
+            conversationEntry.BuildCsv(builder);
 
-                
+            string builderResult = builder.ToString();
+
+            if (string.IsNullOrWhiteSpace(builderResult))
+                return;
+
+            string conversationsFile = string.Format("{0}.conversations", _targetFilePath);
+
+            using(System.IO.StreamWriter writer = new System.IO.StreamWriter(conversationsFile, true))
+            {
+                writer.WriteLine(builderResult);
             }
         }
     }
